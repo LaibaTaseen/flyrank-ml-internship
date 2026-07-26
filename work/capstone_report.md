@@ -35,7 +35,7 @@ Content editors often have hundreds or even thousands of website pages to manage
 **Filter:** only pages with at least 300 impressions in the previous 90 days were included, to remove very low-traffic pages where small absolute changes create misleading percentage swings.
 
 **Leakage check:** all features (impressions, position volatility, query signals) are built only from the prior 90/180-day window; the label is defined by comparing that prior window to the current one — so no feature "sees" its own answer in advance.
-
+![Page status distribution](status_distribution.png)
 ---
 
 ## 3. Baseline
@@ -84,6 +84,7 @@ This is a fair comparison because it uses the same data and the same accuracy me
 | Worth Review | 0.496 | 0.256 | 0.338 |
 
 **Error analysis:** the model is strong on pages that are clearly growing or declining, but noticeably weaker on the "worth review" middle category — it only catches about 26% of true worth-review pages, and is correct only about half the time when it does flag one. This is expected: "worth review" is the fuzziest, least distinct class, and it also has the fewest examples in the dataset (16,310 vs. ~50,000 declining and ~28,000 growing).
+![Model vs baseline accuracy](model_vs_baseline.png)
 
 ---
 
@@ -98,7 +99,7 @@ This is a fair comparison because it uses the same data and the same accuracy me
 6. `top_query_share` (0.100) — least influential
 
 **In plain words:** the size of a page's earlier traffic mattered more than how much its ranking bounced around or how concentrated its traffic was on one search term. The model's biggest error area — the "worth review" middle group — did not have one dominant explanatory factor for most high-traffic pages, suggesting these cases are genuinely mixed/ambiguous rather than driven by a single clear cause. A well-understood weak spot like this is a valid, honest finding, not a failure.
-
+![Feature importance](feature_importance.png)
 ---
 
 ## 7. Recommendation
