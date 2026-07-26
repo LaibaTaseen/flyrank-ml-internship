@@ -1,1 +1,1 @@
-PASTE-YOUR-DEPLOYED-PAPER-URL-HERE
+https://github.com/LaibaTaseen/flyrank-ml-internship/blob/main/work/capstone_report.md
