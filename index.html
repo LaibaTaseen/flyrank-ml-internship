@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refresh &amp; Content Opportunity Scoring — A Research Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#EDEEE6;
+    --paper-2:#E4E5DB;
+    --ink:#1B2430;
+    --ink-soft:#4A5364;
+    --amber:#C98F3B;
+    --teal:#3E7C77;
+    --rule:#CBCCC0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'Source Serif 4',serif;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 0.4em 0;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* Layout */
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px;}
+  header.hero{
+    padding:90px 0 60px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+  h1.title{font-size:2.6rem;line-height:1.15;max-width:9.5em;}
+  .meta{
+    margin-top:22px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    display:flex;gap:28px;flex-wrap:wrap;
+  }
+
+  /* decay curve signature */
+  .curve{width:100%;max-width:520px;margin-top:40px;}
+  .curve svg{width:100%;height:auto;display:block;}
+
+  /* headline stats */
+  .stat-row{
+    display:flex;gap:0;margin:44px 0 0 0;
+    border-top:1px solid var(--rule);
+  }
+  .stat{
+    flex:1;padding:22px 20px 22px 0;
+    border-right:1px solid var(--rule);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'IBM Plex Mono',monospace;font-size:2rem;font-weight:600;}
+  .stat .num.amber{color:var(--amber);}
+  .stat .num.teal{color:var(--teal);}
+  .stat .label{font-size:0.82rem;color:var(--ink-soft);margin-top:4px;}
+
+  nav.toc{
+    padding:24px 0;
+    border-bottom:1px solid var(--rule);
+    display:flex;gap:22px;flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem;
+  }
+  nav.toc a{color:var(--ink-soft);text-decoration:none;border-bottom:1px dotted var(--ink-soft);}
+  nav.toc a:hover{color:var(--ink);}
+
+  section{padding:56px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  .section-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem;color:var(--amber);letter-spacing:0.08em;
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  h2{font-size:1.7rem;margin-bottom:20px;}
+  p{color:var(--ink);max-width:68ch;}
+  ul{max-width:68ch;}
+  li{margin-bottom:8px;}
+
+  .callout{
+    background:var(--paper-2);
+    border-left:3px solid var(--amber);
+    padding:18px 22px;
+    margin:22px 0;
+    font-size:0.95rem;
+  }
+  .abstract{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:70ch;
+  }
+
+  table{border-collapse:collapse;width:100%;margin:20px 0;font-size:0.9rem;}
+  th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--rule);}
+  th{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-soft);}
+  td.mono{font-family:'IBM Plex Mono',monospace;}
+
+  figure{margin:28px 0;}
+  figure img{width:100%;border:1px solid var(--rule);display:block;}
+  figcaption{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--ink-soft);margin-top:8px;}
+
+  .feat-list{list-style:none;padding:0;margin:20px 0;max-width:68ch;}
+  .feat-list li{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--rule);font-size:0.92rem;
+  }
+  .bar-bg{flex:1;height:6px;background:var(--paper-2);margin:0 16px;position:relative;}
+  .bar-fill{height:100%;background:var(--teal);}
+
+  footer{padding:50px 0 90px 0;}
+  footer .credit{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.85rem;color:var(--ink-soft);
+  }
+  footer a{color:var(--ink);}
+
+  @media (max-width:600px){
+    h1.title{font-size:2rem;}
+    .stat-row{flex-direction:column;}
+    .stat{border-right:none;border-bottom:1px solid var(--rule);}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">FlyRank ML Internship · Capstone Research Report</div>
+    <h1 class="title">Which pages need attention, before an editor has to guess.</h1>
+    <p style="max-width:60ch;color:var(--ink-soft);margin-top:18px;">
+      A model for scoring content as growing, declining, or worth review — built and
+      validated on 90 days of real search performance across ~94,000 pages.
+    </p>
+    <div class="meta">
+      <span>AUTHOR — LAIBA</span>
+      <span>LANE — REFRESH / CONTENT OPPORTUNITY SCORING</span>
+      <span>DATE — 26 JUL 2026</span>
+    </div>
+
+    <div class="curve">
+      <svg viewBox="0 0 520 120" fill="none">
+        <line x1="0" y1="100" x2="520" y2="100" stroke="#CBCCC0" stroke-width="1"/>
+        <path d="M0,90 C60,30 110,20 160,28 C220,38 250,70 300,85 C350,98 400,60 460,35 C490,22 505,20 520,22"
+              stroke="#3E7C77" stroke-width="2.5" fill="none"/>
+        <circle cx="160" cy="28" r="3.5" fill="#3E7C77"/>
+        <circle cx="300" cy="85" r="3.5" fill="#C98F3B"/>
+        <circle cx="460" cy="35" r="3.5" fill="#3E7C77"/>
+        <text x="160" y="18" font-family="IBM Plex Mono" font-size="9" fill="#4A5364">peak</text>
+        <text x="278" y="105" font-family="IBM Plex Mono" font-size="9" fill="#4A5364">decay</text>
+        <text x="430" y="27" font-family="IBM Plex Mono" font-size="9" fill="#4A5364">refresh</text>
+      </svg>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num teal">71.5%</div>
+        <div class="label">model accuracy, unseen clients</div>
+      </div>
+      <div class="stat">
+        <div class="num">41.2%</div>
+        <div class="label">baseline (majority-class guess)</div>
+      </div>
+      <div class="stat">
+        <div class="num amber">94,366</div>
+        <div class="label">pages scored, 90-day window</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#abstract">Abstract</a>
+    <a href="#framing">Problem</a>
+    <a href="#data">Data</a>
+    <a href="#method">Methodology</a>
+    <a href="#results">Results</a>
+    <a href="#limits">Limitations</a>
+    <a href="#recs">Recommendations</a>
+    <a href="#repro">Reproducibility</a>
+    <a href="#credit">Credit</a>
+  </nav>
+
+  <section id="abstract">
+    <div class="section-eyebrow">00 — Abstract</div>
+    <h2>Abstract</h2>
+    <p class="abstract">
+      This project asks which website pages need editorial attention based on recent
+      performance trends. Using 90 days of real search data across ~94,000 pages from
+      the FlyRank warehouse, features like impression volume, ranking volatility, and
+      query diversity were used to predict whether a page is growing, declining, or
+      worth reviewing. A Random Forest model was validated on clients unseen during
+      training to test real generalization, reaching 71.5% accuracy against a 41.2%
+      baseline. The output is a ranked table of pages with a suggested action and reason
+      for each, prioritized by traffic impact. This tool is meant to help content editors
+      decide which pages to review first, rather than checking every page manually.
+    </p>
+  </section>
+
+  <section id="framing">
+    <div class="section-eyebrow">01 — Problem Framing</div>
+    <h2>The decision this supports</h2>
+    <p>
+      Content editors often have hundreds or even thousands of pages to manage, so
+      checking every page one by one takes a lot of time. This project helps them
+      quickly find the pages that need the most attention, so they can focus on the
+      important ones first.
+    </p>
+    <ul>
+      <li><strong>Unit of analysis:</strong> a single content page (<span class="mono">content_hash_id</span>)</li>
+      <li><strong>Output:</strong> predicted status, confidence score, suggested action, and reason</li>
+      <li><strong>Action a human takes:</strong> reviews top-ranked pages, decides whether to refresh, monitor, or investigate</li>
+      <li><strong>Cost of a wrong call:</strong> wasted editorial time, or a real decliner going unnoticed</li>
+    </ul>
+  </section>
+
+  <section id="data">
+    <div class="section-eyebrow">02 — Data</div>
+    <h2>Data &amp; scope</h2>
+    <p>
+      <strong>Source:</strong> FlyRank Internship Warehouse (Hugging Face) — tables
+      <span class="mono">fact_content_daily_performance</span>,
+      <span class="mono">fact_content_query_90d</span>, and
+      <span class="mono">dim_clients</span>.
+    </p>
+    <p>
+      <strong>Window:</strong> last 180 days, split into a previous 90-day period and a
+      current 90-day period. <strong>Filter:</strong> pages with at least 300 impressions
+      in the previous 90 days, to remove very low-traffic pages where small absolute
+      changes create misleading percentage swings.
+    </p>
+    <div class="callout">
+      <strong>Excluded by design:</strong> client and content IDs are used only to join
+      and group rows, never as model features. No client names, private search queries,
+      or raw exports appear anywhere in this project.
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="section-eyebrow">03 — Methodology</div>
+    <h2>How the model was built</h2>
+    <p><strong>Features:</strong> prior 90-day impressions, position volatility over 180 days,
+      distinct query count, rare/long-tail traffic share, anonymized traffic share, and
+      top-query concentration.</p>
+    <p><strong>Label:</strong> a page is "growing" if impressions rose 20%+ from the prior period
+      to the current period, "declining" if they fell 20%+, and "worth review" otherwise.</p>
+    <p><strong>Baseline:</strong> always guessing the most common status (majority class).</p>
+    <p><strong>Validation:</strong> split by client, not randomly — the model is tested on
+      clients it has never seen, a fairer test of real generalization.</p>
+    <p><strong>Leakage check:</strong> all features use only the prior-period window; the label
+      compares prior vs. current — no feature sees its own answer in advance.</p>
+  </section>
+
+  <section id="results">
+    <div class="section-eyebrow">04 — Results</div>
+    <h2>Model vs. baseline</h2>
+    <table>
+      <tr><th>Status</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+      <tr><td>Declining</td><td class="mono">0.761</td><td class="mono">0.865</td><td class="mono">0.810</td></tr>
+      <tr><td>Growing</td><td class="mono">0.727</td><td class="mono">0.848</td><td class="mono">0.783</td></tr>
+      <tr><td>Worth Review</td><td class="mono">0.496</td><td class="mono">0.256</td><td class="mono">0.338</td></tr>
+    </table>
+
+    <figure>
+      <img src="work/model_vs_baseline.png" alt="Bar chart comparing model accuracy to baseline accuracy">
+      <figcaption>Fig. 1 — Model accuracy (0.715) vs. baseline (0.412) on the held-out, client-grouped split.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="work/status_distribution.png" alt="Bar chart of page status distribution">
+      <figcaption>Fig. 2 — Distribution of growing / declining / worth-review pages across the dataset.</figcaption>
+    </figure>
+
+    <h3 style="margin-top:36px;">What mattered most</h3>
+    <ul class="feat-list">
+      <li>imp_prev90 <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div> <span class="mono">0.325</span></li>
+      <li>visible_queries <div class="bar-bg"><div class="bar-fill" style="width:54%"></div></div> <span class="mono">0.176</span></li>
+      <li>rare_share <div class="bar-bg"><div class="bar-fill" style="width:46%"></div></div> <span class="mono">0.150</span></li>
+      <li>anon_share <div class="bar-bg"><div class="bar-fill" style="width:42%"></div></div> <span class="mono">0.138</span></li>
+      <li>pos_volatility_180d <div class="bar-bg"><div class="bar-fill" style="width:34%"></div></div> <span class="mono">0.111</span></li>
+      <li>top_query_share <div class="bar-bg"><div class="bar-fill" style="width:31%"></div></div> <span class="mono">0.100</span></li>
+    </ul>
+    <figure>
+      <img src="work/feature_importance.png" alt="Bar chart of feature importances">
+      <figcaption>Fig. 3 — Relative importance of each feature in the trained model.</figcaption>
+    </figure>
+  </section>
+
+  <section id="limits">
+    <div class="section-eyebrow">05 — Limitations</div>
+    <h2>What this can't claim</h2>
+    <ul>
+      <li>Weakest on "worth review" pages — recall of 0.256 means most true middle-ground cases are missed.</li>
+      <li>Shows association, not cause — it can flag a decline without explaining why it happened.</li>
+      <li>A single 180-day snapshot, not a live or continuously updating view.</li>
+      <li>Percentage-based labels can be noisy near the 300-impression cutoff.</li>
+      <li>Validated across available clients, but may not generalize to very different site types.</li>
+    </ul>
+  </section>
+
+  <section id="recs">
+    <div class="section-eyebrow">06 — Ranked Recommendations</div>
+    <h2>The action playbook</h2>
+    <p>
+      Pages are ranked by traffic volume so editors see the highest-impact cases first.
+      Each row carries a predicted status, a confidence score, a suggested action —
+      <span class="mono">Refresh Soon</span>, <span class="mono">Manual Review</span>, or
+      <span class="mono">Monitor / Protect</span> — and a reason where one clear factor stood out.
+    </p>
+    <div class="callout">
+      Human review is required before acting on any recommendation — the model flags
+      candidates, it does not make or publish decisions on its own.
+    </div>
+  </section>
+
+  <section id="repro">
+    <div class="section-eyebrow">07 — Reproducibility</div>
+    <h2>Rerun this work</h2>
+    <p>
+      Clone the repository and open <span class="mono">work/notebooks/capstone.ipynb</span>.
+      Requires <span class="mono">duckdb</span>, <span class="mono">huggingface_hub</span>,
+      <span class="mono">pandas</span>, <span class="mono">scikit-learn</span>, and
+      <span class="mono">matplotlib</span>, plus a free Hugging Face read token. Run all
+      cells top to bottom to reproduce every result, including data pull, features,
+      training, and charts. <span class="mono">random_state=42</span> throughout.
+    </p>
+    <p>
+      Full notebooks and history: <a href="https://github.com/LaibaTaseen/flyrank-ml-internship">github.com/LaibaTaseen/flyrank-ml-internship</a>
+    </p>
+  </section>
+
+  <footer id="credit">
+    <div class="credit">
+      Built on the FlyRank ML Internship dataset — <a href="https://flyrank.ai">flyrank.ai</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
